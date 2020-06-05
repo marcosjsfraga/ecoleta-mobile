@@ -1,14 +1,49 @@
-
+import React from 'react';
+import Constants from 'expo-constants'
 import { Feather as Icon } from '@expo/vector-icons'
-import { StyleSheet, Text, View, Image, ImageBackground } from 'react-native';
+import { useNavigation } from '@react-navigation/native'
+import { StyleSheet, Text, View, TouchableOpacity, ScrollView } from 'react-native';
+import MapView from 'react-native-maps'
+import { SvgUri } from 'react-native-svg'
 
 const Points = () => {
+    const navigation = useNavigation();
+    function handleNavigateBack() {
+        navigation.goBack();
+    }
+  
     return(
-      <View>Detail</View>
+        <>
+            <View style={styles.container}>
+                <TouchableOpacity onPress={handleNavigateBack}>
+                    <Icon name="arrow-left" size={20} color="#34cb79" />
+                </TouchableOpacity>
+
+                <Text style={styles.title}>Bem vindo.</Text>
+                <Text style={styles.description}>Encontre no mapa um ponto de coleta.</Text>
+
+                <View style={styles.mapContainer}>
+                    <MapView style={styles.map} />
+                </View>
+            </View>
+            <View style={styles.itemsContainer} >
+                <ScrollView 
+                    horizontal 
+                    showsHorizontalScrollIndicator={false}
+                    contentContainerStyle={{
+                        paddingHorizontal: 20
+                    }}
+                >
+                    <TouchableOpacity style={styles.item} onPress={() => {}}>
+                        <SvgUri width={42} height={42} uri="http://192.168.1.100:3333/uploads/lampada.svg"/>
+                        <Text style={styles.itemTitle}>Lampadas</Text>
+                    </TouchableOpacity>
+                </ScrollView>
+            </View>
+        </>
     )
 }
 
-/*
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -18,7 +53,7 @@ const styles = StyleSheet.create({
 
   title: {
     fontSize: 20,
-    fontFamily: 'Ubuntu_700Bold',
+    // fontFamily: 'Ubuntu_700Bold',
     marginTop: 24,
   },
 
@@ -26,7 +61,7 @@ const styles = StyleSheet.create({
     color: '#6C6C80',
     fontSize: 16,
     marginTop: 4,
-    fontFamily: 'Roboto_400Regular',
+    // fontFamily: 'Roboto_400Regular',
   },
 
   mapContainer: {
@@ -65,7 +100,7 @@ const styles = StyleSheet.create({
 
   mapMarkerTitle: {
     flex: 1,
-    fontFamily: 'Roboto_400Regular',
+    // fontFamily: 'Roboto_400Regular',
     color: '#FFF',
     fontSize: 13,
     lineHeight: 23,
@@ -100,11 +135,10 @@ const styles = StyleSheet.create({
   },
 
   itemTitle: {
-    fontFamily: 'Roboto_400Regular',
+    // fontFamily: 'Roboto_400Regular',
     textAlign: 'center',
     fontSize: 13,
   },
 });
-*/
 
 export default Points;
