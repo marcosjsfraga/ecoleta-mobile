@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Constants from 'expo-constants'
 import { Feather as Icon } from '@expo/vector-icons'
-import { useNavigation } from '@react-navigation/native'
+import { useNavigation, useRoute } from '@react-navigation/native'
 import { StyleSheet, Text, View, Image, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import MapView, { Marker } from 'react-native-maps'
 import { SvgUri } from 'react-native-svg'
@@ -15,19 +15,30 @@ interface Items {
 }
 
 interface Point {
-	id: number;
-	name: string;
-	image: string;
-	latitude: number;
-	longitude: number;
+	id: number
+	name: string
+	image: string
+	image_url: string;
+	latitude: number
+	longitude: number
+}
+
+interface Params {
+	uf: string
+	city: string
 }
 
 const Points = () => {
 	const [items, setItems] = useState<Items[]>([])
 	const [points, setPoints] = useState<Point[]>([])
 	const [selectedItems, setSelectedItems] = useState<number[]>([])
+	
 	const [initialPosition, setInitialPosition] = useState<[number, number]>([0, 0])
+	
 	const navigation = useNavigation();
+	const route = useRoute()
+
+	const routeParams = route.params as Params
 	
 	// Pegar Geolocalizacao atual
 	useEffect(() => {
@@ -61,14 +72,14 @@ const Points = () => {
 	useEffect(() => {
 		api.get('points', {
 			params: {
-				city: 'Canoas',
-				uf: 'RS',
-				items: [1,2]
+				city: routeParams.city,
+				uf: routeParams.uf,
+				items: selectedItems
 			}
 		}).then(response => {
 			setPoints(response.data)
 		})
-	}, [])
+	}, [selectedItems])
     
     function handleNavigateBack() {
         navigation.goBack();
@@ -95,7 +106,7 @@ const Points = () => {
         <>
             <View style={styles.container}>
                 <TouchableOpacity onPress={handleNavigateBack}>
-                    <Icon name="arrow-left" size={20} color="#34cb79" />
+                    <Icon name="arrow-left" size={25} color="#34cb79" />
                 </TouchableOpacity>
 
                 <Text style={styles.title}>Bem vindo.</Text>
@@ -123,7 +134,7 @@ const Points = () => {
 									}}
 								>
 									<View style={styles.mapMarkerContainer}>
-										<Image style={styles.mapMarkerImage} source={{ uri: point.image }}/>
+										<Image style={styles.mapMarkerImage} source={{ uri: point.image_url }}/>
 										<Text style={styles.mapMarkerTitle}>{point.name}</Text>
 									</View>
 								</Marker>
